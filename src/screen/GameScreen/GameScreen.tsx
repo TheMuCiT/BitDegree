@@ -1,65 +1,60 @@
 import {View, Text} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styles from './gameScreen.Styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState, AppDispatch} from '../../redux/store';
-import {decrementTime, incrementScore, resetGame} from '../../redux/gameSlice';
 import Button from '../../components/Button/Button';
 import TapButton from '../../components/TapButton/TapButton';
+import {incrementScore, resetScore} from '../../redux/gameSlice';
+import {useTimer} from './useTimer';
 
 const GameScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const score = useSelector((state: RootState) => state.game.score);
-  const timeLeft = useSelector((state: RootState) => state.game.timeLeft);
-  const multiplier = useSelector((state: RootState) => state.game.multiplier);
-  const streak = useSelector((state: RootState) => state.game.streak);
-  const [lastTapTime, setLastTapTime] = useState<number | null>(null);
+  const {score, streak, totalAccuracy, tapCount, multiplier} = useSelector(
+    (state: RootState) => state.game,
+  );
 
-  useEffect(() => {
-    if (timeLeft === 0) return;
-    const timer = setTimeout(() => {
-      dispatch(decrementTime());
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [timeLeft, dispatch]);
+  const {startTime, time, started, startGame, resetTimer} = useTimer();
 
-  const handleTap = () => {
-    if (timeLeft > 0) {
-      const currentTime = Date.now();
-      let accuracy = 1;
-      let speed = 1;
+  const handleStart = () => {
+    startGame();
+  };
 
-      if (lastTapTime) {
-        const timeDifference = (currentTime - lastTapTime) / 1000;
-        speed = timeDifference;
-        accuracy = 1 - Math.min(timeDifference / 2, 1);
-      }
-
-      setLastTapTime(currentTime);
-      dispatch(incrementScore({accuracy, speed}));
+  const handleTap = (accuracy: number) => {
+    if (started) {
+      dispatch(incrementScore(accuracy));
     }
   };
+
+  const handleReset = () => {
+    resetTimer();
+    dispatch(resetScore());
+  };
+
+  const averageAccuracy =
+    tapCount > 0 ? (totalAccuracy / tapCount).toFixed(1) : 0;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.score}>Score: {score}</Text>
-      <Text style={styles.timer}>Time Left: {timeLeft}</Text>
-      <Text style={styles.multiplier}>Multiplier: {multiplier}</Text>
-      <Text style={styles.streak}>Streak: {streak}</Text>
-      {/* <TapButton onPress={handleTap} />
-       */}
-      <Button
-        title="Tap Me!"
-        onPress={handleTap}
-        primary={false}
-        style={{marginBottom: 10}}
-      />
-      <Button
-        title="Reset"
-        onPress={() => {
-          dispatch(resetGame());
-        }}
-        primary={false}
-      />
+      <Text style={styles.scoreText}>Score: {score.toFixed(0)}</Text>
+      <Text style={styles.streakText}>Streak: {streak}</Text>
+      <Text style={styles.accuracyText}>
+        Average Accuracy: {averageAccuracy}
+      </Text>
+      <Text style={styles.multiplierText}>Multiplier: {multiplier}x</Text>
+      <Text style={styles.timerText}>Time Left: {time}s</Text>
+      {started ? (
+        startTime > 0 ? (
+          <Text style={styles.countdown}>{startTime}</Text>
+        ) : (
+          <TapButton onPress={handleTap} />
+        )
+      ) : (
+        <Button title="Start" onPress={handleStart} />
+      )}
+
+      <Button title="Reset" onPress={handleReset} />
+      <Text style={styles.instructionText}>Tap the button to earn points!</Text>
     </View>
   );
 };

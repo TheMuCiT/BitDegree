@@ -1,11 +1,7 @@
-import {
-  Text,
-  GestureResponderEvent,
-  TouchableOpacity,
-  LayoutChangeEvent,
-} from 'react-native';
+import {GestureResponderEvent, LayoutChangeEvent, View} from 'react-native';
 import React, {useState} from 'react';
 import styles from './tapButton.styles';
+import Svg, {Circle} from 'react-native-svg';
 
 interface TapButtonProps {
   onPress: (accuracy: number) => void;
@@ -20,12 +16,6 @@ const TapButton = ({onPress}: TapButtonProps) => {
     setButtonRadius(radius);
   };
 
-  const getColor = (distance: number, radius: number): string => {
-    if (distance < radius * 0.5) return 'green';
-    else if (distance < radius * 0.8) return 'yellow';
-    else return 'red';
-  };
-
   const handlePress = (event: GestureResponderEvent) => {
     if (!buttonRadius) return;
 
@@ -35,34 +25,70 @@ const TapButton = ({onPress}: TapButtonProps) => {
     const distance = Math.sqrt(
       Math.pow(locationX - centerX, 2) + Math.pow(locationY - centerY, 2),
     );
-    const accuracy = getColor(distance, buttonRadius);
 
-    let accuracyValue = 0;
-    switch (accuracy) {
-      case 'green':
-        accuracyValue = 1;
-        break;
-      case 'yellow':
-        accuracyValue = 0.6;
-        break;
-      case 'red':
-        accuracyValue = 0.1;
-        break;
-      default:
-        break;
-    }
+    const zones: [number, number][] = [
+      [0.2, 1],
+      [0.4, 0.8],
+      [0.6, 0.6],
+      [0.8, 0.4],
+      [1, 0.1],
+    ];
 
-    console.log(accuracy);
-    onPress(accuracyValue);
+    const accuracy =
+      zones.find(([threshold]) => distance <= buttonRadius * threshold)?.[1] ||
+      0;
+
+    onPress(accuracy);
   };
 
   return (
-    <TouchableOpacity
+    <View
+      style={styles.container}
       onLayout={handleLayout}
-      style={styles.button}
-      onPress={handlePress}>
-      <Text style={styles.buttonText}>Tap Me!</Text>
-    </TouchableOpacity>
+      onTouchEnd={handlePress}>
+      {buttonRadius && (
+        <Svg height={buttonRadius * 2} width={buttonRadius * 2}>
+          <Circle
+            cx={buttonRadius}
+            cy={buttonRadius}
+            r={buttonRadius - 2}
+            fill="none"
+            stroke="#6B65DF"
+            strokeWidth={2}
+          />
+          <Circle
+            cx={buttonRadius}
+            cy={buttonRadius}
+            r={buttonRadius * 0.8 - 2}
+            fill="none"
+            stroke="#6B65DF"
+            strokeWidth={2}
+          />
+          <Circle
+            cx={buttonRadius}
+            cy={buttonRadius}
+            r={buttonRadius * 0.6 - 2}
+            fill="none"
+            stroke="#6B65DF"
+            strokeWidth={2}
+          />
+          <Circle
+            cx={buttonRadius}
+            cy={buttonRadius}
+            r={buttonRadius * 0.4 - 2}
+            fill="none"
+            stroke="#6B65DF"
+            strokeWidth={2}
+          />
+          <Circle
+            cx={buttonRadius}
+            cy={buttonRadius}
+            r={buttonRadius * 0.2 - 2}
+            fill="#6B65DF"
+          />
+        </Svg>
+      )}
+    </View>
   );
 };
 

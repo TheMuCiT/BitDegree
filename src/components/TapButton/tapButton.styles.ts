@@ -1,16 +1,12 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
-  button: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+  container: {
+    width: 220,
+    height: 220,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-  },
-  buttonText: {
-    fontSize: 16,
+    marginBottom: 20,
   },
 });
 
