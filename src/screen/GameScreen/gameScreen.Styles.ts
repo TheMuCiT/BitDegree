@@ -1,49 +1,56 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+    backgroundColor: '#6003A0',
+    padding: 20,
+  },
+  backButton: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#6003A0',
+    marginTop: 10,
   },
-  scoreText: {
+  textContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  textItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  title: {
     fontSize: 24,
     marginBottom: 10,
+    maxWidth: 250,
+    textAlign: 'center',
+    color: '#fff',
   },
-  streakText: {
+  text: {
     fontSize: 24,
     marginBottom: 10,
+    color: '#fff',
   },
-  accuracyText: {
-    fontSize: 24,
-    marginBottom: 10,
-  },
-  multiplierText: {
-    fontSize: 24,
-    marginBottom: 20,
+  mainContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   timerText: {
-    fontSize: 24,
+    fontSize: 28,
     marginBottom: 20,
-    color: 'red',
+    color: '#fff',
   },
   countdown: {
     fontSize: 40,
-  },
-  tapButton: {
-    position: 'relative',
-  },
-  startButton: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{translateX: 0}, {translateY: 0}],
-    width: 100,
-  },
-  instructionText: {
-    fontSize: 16,
-    marginTop: 20,
+    color: '#fff',
   },
 });
 

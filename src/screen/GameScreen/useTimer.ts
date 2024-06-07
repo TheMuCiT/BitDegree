@@ -7,6 +7,7 @@ export const useTimer = (
   const [time, setTime] = useState<number>(initialTime);
   const [startTime, setStartTime] = useState<number>(initialStartTime);
   const [started, setStarted] = useState<boolean>(false);
+  const [ended, setEnded] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -30,7 +31,7 @@ export const useTimer = (
           if (prevTime === 0) {
             clearInterval(startRef.current!);
             startRef.current = null;
-            startTimer();
+            startTimer(initialTime);
             return 0;
           }
           return prevTime - 1;
@@ -48,6 +49,8 @@ export const useTimer = (
             clearInterval(intervalRef.current!);
             intervalRef.current = null;
             setStarted(false);
+            setEnded(true);
+            setEnded;
             return 0;
           }
           return prevTime - 1;
@@ -57,10 +60,11 @@ export const useTimer = (
   };
 
   const resetTimer = () => {
+    setEnded(false);
     setTime(initialTime);
     intervalRef.current = null;
     setStarted(false);
   };
 
-  return {startTime, time, started, startGame, resetTimer};
+  return {startTime, time, started, ended, startGame, resetTimer};
 };

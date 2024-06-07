@@ -6,20 +6,21 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+    marginBottom: 5,
   },
   secondaryButton: {
-    backgroundColor: '#03DAC6',
+    backgroundColor: '#6200EE',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
   primaryText: {
-    color: 'white',
-    fontSize: 16,
+    color: '#fff',
+    fontSize: 24,
   },
   secondaryText: {
-    color: 'black',
-    fontSize: 16,
+    color: '#fff',
+    fontSize: 18,
   },
 });
 
